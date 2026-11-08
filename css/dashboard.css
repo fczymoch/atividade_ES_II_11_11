@@ -116,3 +116,85 @@
     flex-wrap: wrap;
   }
 }
+
+/* ===== Resumo financeiro (card 07) ===== */
+.resumo-periodo {
+  grid-template-columns: repeat(2, minmax(0, 220px));
+}
+
+.resumo-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.resumo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.resumo-rotulo {
+  font-size: 0.9rem;
+  color: var(--cor-texto-suave);
+}
+
+.resumo-valor {
+  font-size: 1.5rem;
+}
+
+.resumo-grafico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.resumo-grafico[hidden] {
+  display: none;
+}
+
+.resumo-legenda {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 220px;
+}
+
+.resumo-legenda li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legenda-cor {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legenda-nome {
+  flex: 1;
+}
+
+.legenda-valor {
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .resumo-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.resumo-valor.receita {
+  color: var(--cor-receita);
+}
+
+.resumo-valor.despesa {
+  color: var(--cor-despesa);
+}
