@@ -251,10 +251,6 @@ function criarLinha(transacao) {
   return linha;
 }
 
-function textoQuantidade(quantidade) {
-  return `${quantidade} ${quantidade === 1 ? "lançamento" : "lançamentos"}`;
-}
-
 function renderizarTabela() {
   const todas = transacoesDoUsuario();
   const lista = aplicarFiltros(todas); // filtros.js: mês/ano, tipo, categoria e busca combinados
