@@ -1,0 +1,164 @@
+/* ===== Tela de login (card 02) ===== */
+.pagina-auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-escura) 100%);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--cor-card);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 2rem 1.75rem;
+}
+
+.auth-cabecalho {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-logo {
+  font-size: 2.5rem;
+  display: block;
+}
+
+.auth-cabecalho h1 {
+  font-size: 1.5rem;
+  margin: 0.25rem 0;
+}
+
+.auth-subtitulo {
+  color: var(--cor-texto-suave);
+  font-size: 0.95rem;
+}
+
+/* ===== Campos ===== */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.campo label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+
+.campo input {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  font: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(30, 127, 92, 0.2);
+}
+
+.campo input[aria-invalid="true"] {
+  border-color: var(--cor-despesa);
+}
+
+.campo-erro {
+  color: var(--cor-despesa);
+  font-size: 0.8rem;
+  min-height: 1rem;
+  margin-top: 0.25rem;
+}
+
+.campo-senha {
+  position: relative;
+}
+
+.campo-senha input {
+  padding-right: 5rem;
+}
+
+.btn-mostrar-senha {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  color: var(--cor-primaria);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+}
+
+/* ===== Botões ===== */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--raio);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primario {
+  background: var(--cor-primaria);
+  color: #fff;
+}
+
+.btn-primario:hover {
+  background: var(--cor-primaria-escura);
+}
+
+.btn-primario:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.btn-bloco {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* ===== Alertas ===== */
+.alerta {
+  padding: 0.75rem 1rem;
+  border-radius: var(--raio);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.alerta-erro {
+  background: #fdecec;
+  color: #9b1c1c;
+  border: 1px solid #f5c2c2;
+}
+
+/* ===== Rodapé ===== */
+.auth-rodape {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--cor-texto-suave);
+}
+
+.auth-rodape a {
+  color: var(--cor-primaria);
+  font-weight: 600;
+}
+
+@media (max-width: 420px) {
+  .auth-card {
+    padding: 1.5rem 1.25rem;
+  }
+}

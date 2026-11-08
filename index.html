@@ -5,13 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | Controle Financeiro</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/login.css">
 </head>
-<body>
-  <main class="container">
-    <h1>💰 Controle Financeiro</h1>
-    <p>Estrutura inicial do projeto. A tela de login é implementada no <strong>card 02</strong>.</p>
+<body class="pagina-auth">
+  <main class="auth-card">
+    <header class="auth-cabecalho">
+      <span class="auth-logo" aria-hidden="true">💰</span>
+      <h1>Controle Financeiro</h1>
+      <p class="auth-subtitulo">Entre para acompanhar suas receitas e despesas</p>
+    </header>
+
+    <div id="mensagem-erro" class="alerta alerta-erro" role="alert" aria-live="assertive" hidden></div>
+
+    <form id="form-login" novalidate>
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="voce@exemplo.com"
+               autocomplete="email" required aria-describedby="erro-email">
+        <small id="erro-email" class="campo-erro"></small>
+      </div>
+
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <div class="campo-senha">
+          <input type="password" id="senha" name="senha" placeholder="Sua senha"
+                 autocomplete="current-password" required aria-describedby="erro-senha">
+          <button type="button" id="btn-mostrar-senha" class="btn-mostrar-senha"
+                  aria-label="Mostrar senha" aria-pressed="false">Mostrar</button>
+        </div>
+        <small id="erro-senha" class="campo-erro"></small>
+      </div>
+
+      <button type="submit" id="btn-entrar" class="btn btn-primario btn-bloco">Entrar</button>
+    </form>
+
+    <p class="auth-rodape">
+      Ainda não tem conta? <a href="cadastro.html">Criar conta</a>
+    </p>
   </main>
 
   <script src="js/app.js"></script>
+  <script src="js/login.js"></script>
 </body>
 </html>

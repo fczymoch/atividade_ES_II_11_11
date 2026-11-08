@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Controle Financeiro</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Página provisória para o redirecionamento do login (card 02).
+       O layout completo, a proteção de acesso e o logout são feitos no card 04. -->
+  <main class="container">
+    <h1>Dashboard</h1>
+    <p id="boas-vindas">Login realizado.</p>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    const sessao = obterSessao();
+    if (sessao) {
+      document.getElementById("boas-vindas").textContent = `Olá, ${sessao.nome}! Login realizado.`;
+    }
+  </script>
+</body>
+</html>

@@ -31,3 +31,19 @@ function lerStorage(chave, padrao) {
 function salvarStorage(chave, valor) {
   localStorage.setItem(chave, JSON.stringify(valor));
 }
+
+// Retorna o usuário logado ({ nome, email, loginEm }) ou null
+function obterSessao() {
+  return lerStorage(STORAGE_KEYS.sessao, null);
+}
+
+// Gera o hash SHA-256 (hexadecimal) de uma senha — usado no login e no cadastro
+async function gerarHashSenha(senha) {
+  // crypto.subtle só existe em contexto seguro (https, localhost ou arquivo local)
+  if (!window.crypto || !window.crypto.subtle) return null;
+  const bytes = new TextEncoder().encode(senha);
+  const hash = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
