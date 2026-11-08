@@ -80,3 +80,77 @@
     padding: 1.5rem 1.25rem;
   }
 }
+
+/* ===== Painel de usuários de teste (card 09) ===== */
+.painel-demo {
+  margin-top: 1.25rem;
+  border: 1px dashed var(--cor-borda);
+  border-radius: var(--raio);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.painel-demo summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+.painel-demo p {
+  margin: 0.6rem 0 0.4rem;
+}
+
+.painel-demo code {
+  background: var(--cor-fundo);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.painel-demo ul {
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.btn-demo {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: var(--cor-card);
+  font: inherit;
+  color: var(--cor-texto);
+  cursor: pointer;
+  text-align: left;
+}
+
+.btn-demo:hover {
+  border-color: var(--cor-primaria);
+}
+
+.btn-demo span {
+  color: var(--cor-texto-suave);
+}
+
+.btn-link {
+  margin-top: 0.6rem;
+  border: none;
+  background: none;
+  color: var(--cor-primaria);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.painel-demo-msg {
+  display: block;
+  color: var(--cor-receita);
+  margin-top: 0.3rem;
+}
