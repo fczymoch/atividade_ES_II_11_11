@@ -1,12 +1,7 @@
 // ===== Lançamentos: CRUD de receitas e despesas (card 05) =====
+// Categorias vêm do categorias.js e os filtros do filtros.js (carregar antes deste arquivo).
 // Depende do app.js (STORAGE_KEYS, lerStorage, salvarStorage, formatarMoeda, formatarData)
 // e do auth.js (sessaoAtual). Cada lançamento guarda o e-mail do dono.
-
-// Lista fixa por enquanto; o card 06 troca por categorias do usuário.
-const CATEGORIAS_PADRAO = [
-  "Salário", "Alimentação", "Moradia", "Transporte",
-  "Lazer", "Saúde", "Educação", "Outros"
-];
 
 const formLancamento = document.getElementById("form-lancamento");
 const campoDescricao = document.getElementById("descricao");
@@ -23,6 +18,7 @@ const tituloForm = document.getElementById("titulo-form");
 const tabela = document.getElementById("tabela-lancamentos");
 const corpoTabela = document.getElementById("corpo-lancamentos");
 const listaVazia = document.getElementById("lista-vazia");
+const contagemLancamentos = document.getElementById("contagem-lancamentos");
 
 let idEditando = null;   // lançamento em edição (null = criando)
 let idExcluindo = null;  // lançamento aguardando confirmação de exclusão
@@ -56,14 +52,17 @@ function mostrarErroCampo(campo, elementoErro, texto) {
   campo.setAttribute("aria-invalid", texto ? "true" : "false");
 }
 
+// Monta o <select> com as categorias do usuário (padrão + próprias), mantendo a escolha atual
 function preencherCategorias() {
-  CATEGORIAS_PADRAO.forEach(nome => {
+  const atual = campoCategoria.value;
+  const nomes = categoriasDoUsuario().map(c => c.nome);
+  campoCategoria.replaceChildren(...nomes.map(nome => {
     const opcao = document.createElement("option");
     opcao.value = nome;
     opcao.textContent = nome;
-    campoCategoria.appendChild(opcao);
-  });
-  campoCategoria.value = "Outros";
+    return opcao;
+  }));
+  campoCategoria.value = nomes.includes(atual) ? atual : CATEGORIA_PADRAO_FALLBACK;
 }
 
 // ----- Validação -----
@@ -100,7 +99,7 @@ function limparFormulario() {
   idEditando = null;
   formLancamento.reset();
   campoTipo.value = "despesa";
-  campoCategoria.value = "Outros";
+  campoCategoria.value = CATEGORIA_PADRAO_FALLBACK;
   campoData.value = dataHojeISO();
   [
     [campoDescricao, erroDescricao],
@@ -121,7 +120,7 @@ function iniciarEdicao(id) {
   campoDescricao.value = transacao.descricao;
   campoValor.value = transacao.valor;
   campoTipo.value = transacao.tipo;
-  // categoria removida no futuro (card 06) não pode sumir da edição
+  // categoria que não existe mais na lista não pode sumir da edição
   if (![...campoCategoria.options].some(o => o.value === transacao.categoria)) {
     const opcao = document.createElement("option");
     opcao.value = transacao.categoria;
@@ -175,6 +174,7 @@ formLancamento.addEventListener("submit", evento => {
 
   limparFormulario();
   renderizarTabela();
+  document.dispatchEvent(new CustomEvent("transacoes:alteradas"));
 });
 
 btnCancelar.addEventListener("click", () => {
@@ -194,6 +194,7 @@ function excluirTransacao(id) {
   idExcluindo = null;
   if (idEditando === id) limparFormulario();
   renderizarTabela();
+  document.dispatchEvent(new CustomEvent("transacoes:alteradas"));
 }
 
 // ----- Tabela -----
@@ -250,12 +251,27 @@ function criarLinha(transacao) {
   return linha;
 }
 
+function textoQuantidade(quantidade) {
+  return `${quantidade} ${quantidade === 1 ? "lançamento" : "lançamentos"}`;
+}
+
 function renderizarTabela() {
-  const lista = transacoesDoUsuario();
+  const todas = transacoesDoUsuario();
+  const lista = aplicarFiltros(todas); // filtros.js: mês/ano, tipo, categoria e busca combinados
+
   corpoTabela.replaceChildren(...lista.map(criarLinha));
   tabela.hidden = lista.length === 0;
   listaVazia.hidden = lista.length !== 0;
+  listaVazia.textContent = todas.length === 0
+    ? "Nenhum lançamento ainda. Use o formulário acima para adicionar o primeiro."
+    : "Nenhum lançamento encontrado com os filtros escolhidos. Ajuste ou limpe os filtros.";
+  contagemLancamentos.textContent = todas.length === 0
+    ? ""
+    : `Mostrando ${lista.length} de ${textoQuantidade(todas.length)}.`;
 }
+
+// Categoria criada ou removida: atualiza o formulário
+document.addEventListener("categorias:alteradas", preencherCategorias);
 
 // ----- Início -----
 if (sessaoAtual) {

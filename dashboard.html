@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/transacoes.css">
+  <link rel="stylesheet" href="css/categorias.css">
   <!-- app.js e auth.js no <head>: sem sessão, redireciona antes de exibir a página -->
   <script src="js/app.js"></script>
   <script src="js/auth.js"></script>
@@ -84,8 +85,49 @@
         </form>
       </div>
 
+      <div class="card">
+        <h3 class="card-titulo">Filtros</h3>
+        <form id="form-filtros" novalidate>
+          <div class="filtros-grade">
+            <div class="campo">
+              <label for="filtro-mes">Mês</label>
+              <select id="filtro-mes"></select>
+            </div>
+
+            <div class="campo">
+              <label for="filtro-ano">Ano</label>
+              <select id="filtro-ano"></select>
+            </div>
+
+            <div class="campo">
+              <label for="filtro-tipo">Tipo</label>
+              <select id="filtro-tipo">
+                <option value="todos">Todos</option>
+                <option value="receita">Receitas</option>
+                <option value="despesa">Despesas</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="filtro-categoria">Categoria</label>
+              <select id="filtro-categoria"></select>
+            </div>
+
+            <div class="campo campo-busca">
+              <label for="filtro-busca">Buscar na descrição</label>
+              <input type="search" id="filtro-busca" placeholder="Ex.: mercado" autocomplete="off">
+            </div>
+
+            <div class="campo campo-limpar">
+              <button type="button" id="btn-limpar-filtros" class="btn btn-secundario">Limpar filtros</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
       <div class="card card-tabela">
         <h3 class="card-titulo">Seus lançamentos</h3>
+        <p id="contagem-lancamentos" class="texto-suave contagem-lancamentos" aria-live="polite"></p>
         <p id="lista-vazia" class="texto-suave" hidden>Nenhum lançamento ainda. Use o formulário acima para adicionar o primeiro.</p>
         <div class="tabela-wrapper">
           <table class="tabela" id="tabela-lancamentos" hidden>
@@ -108,7 +150,23 @@
     <section id="categorias" class="secao" hidden>
       <h2>Categorias</h2>
       <div class="card">
-        <p class="texto-suave">As categorias e os filtros serão implementados no card 06.</p>
+        <h3 class="card-titulo">Nova categoria</h3>
+        <div id="mensagem-categoria" class="alerta alerta-erro" role="alert" aria-live="assertive" hidden></div>
+        <form id="form-categoria" novalidate>
+          <div class="categoria-form">
+            <div class="campo">
+              <label for="nome-categoria">Nome</label>
+              <input type="text" id="nome-categoria" maxlength="30" placeholder="Ex.: Pets" autocomplete="off" aria-describedby="erro-nome-categoria">
+              <small id="erro-nome-categoria" class="campo-erro"></small>
+            </div>
+            <button type="submit" class="btn btn-primario">Adicionar categoria</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3 class="card-titulo">Suas categorias</h3>
+        <ul id="lista-categorias" class="lista-categorias"></ul>
       </div>
     </section>
   </main>
@@ -118,6 +176,9 @@
   </footer>
 
   <script src="js/dashboard.js"></script>
+  <!-- Ordem importa: categorias e filtros antes de transacoes.js -->
+  <script src="js/categorias.js"></script>
+  <script src="js/filtros.js"></script>
   <script src="js/transacoes.js"></script>
 </body>
 </html>
