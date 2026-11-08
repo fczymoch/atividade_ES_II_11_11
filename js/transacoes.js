@@ -296,6 +296,10 @@ function criarLinha(transacao) {
 
   celulaAcoes.appendChild(acoes);
   linha.appendChild(celulaAcoes);
+
+  // Rótulos usados pelo CSS no celular (a tabela vira lista de cartões)
+  const rotulos = ["Data", "Descrição", "Categoria", "Tipo", "Valor", "Ações"];
+  Array.from(linha.children).forEach((celula, i) => { celula.dataset.rotulo = rotulos[i]; });
   return linha;
 }
 

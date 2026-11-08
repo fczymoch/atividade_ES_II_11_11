@@ -7,11 +7,10 @@ O usuário faz **login**, lança **receitas e despesas**, organiza por **categor
 
 ## Como rodar
 
-1. Clone o repositório e mude para a branch `develop`:
+1. Clone o repositório (a branch `main` tem a versão estável **v1.0.0**):
    ```bash
    git clone https://github.com/fczymoch/atividade_ES_II_11_11.git
    cd atividade_ES_II_11_11
-   git checkout develop
    ```
 2. Abra o `index.html` no navegador (ou use a extensão **Live Server** do VS Code).
 
@@ -40,19 +39,35 @@ O botão **"Restaurar dados de demonstração"** recria só os dados desses usu�
 [{ id, email, descricao, valor, tipo /* "receita" | "despesa" */, categoria, data /* "AAAA-MM-DD" */ }]
 ```
 
+## Telas
+
+> Substitua os arquivos em `docs/prints/` pelos prints reais (mesmos nomes).
+
+| Tela | Print |
+|------|-------|
+| Login | ![Login](docs/prints/login.png) |
+| Cadastro | ![Cadastro](docs/prints/cadastro.png) |
+| Resumo e gráfico | ![Resumo](docs/prints/resumo.png) |
+| Lançamentos e filtros | ![Lançamentos](docs/prints/lancamentos.png) |
+| Categorias | ![Categorias](docs/prints/categorias.png) |
+| Versão para celular | ![Celular](docs/prints/celular.png) |
+
 ## Estrutura de pastas
 
 ```
 ├── index.html          # Tela de login (card 02)
 ├── cadastro.html       # Cadastro de usuário (card 03)
 ├── dashboard.html      # Área logada (cards 04 a 07)
-├── css/
-│   └── style.css       # Estilos globais e variáveis
-├── js/
-│   └── app.js          # Utilitários compartilhados
+├── css/                # Estilos (style.css = globais; responsivo.css = celular e tablet)
+├── js/                 # Scripts de cada tela (app.js = utilitários compartilhados)
+├── docs/prints/        # Prints das telas usados neste README
 ├── scripts/            # Setup do GitHub (labels, issues, board)
 └── .github/            # Templates de issue e pull request
 ```
+
+## Responsividade
+
+O layout se adapta a **tablet (até 900px)** e **celular (até 600px)**, sem rolagem horizontal. No celular, a tabela de lançamentos vira uma lista de cartões. Os estilos ficam em `css/responsivo.css`.
 
 ## Funcionalidades (cards do board)
 
