@@ -3,7 +3,8 @@
 const STORAGE_KEYS = {
   usuarios: "cf_usuarios",   // lista de usuários cadastrados (card 03)
   sessao: "cf_sessao",       // usuário logado (cards 02 e 04)
-  transacoes: "cf_transacoes" // lançamentos por usuário (card 05)
+  transacoes: "cf_transacoes", // lançamentos por usuário (card 05)
+  categorias: "cf_categorias"  // categorias criadas pelos usuários (card 06)
 };
 
 // Formata número como moeda brasileira: 1234.5 -> "R$ 1.234,50"
@@ -46,4 +47,14 @@ async function gerarHashSenha(senha) {
   return Array.from(new Uint8Array(hash))
     .map(b => b.toString(16).padStart(2, "0"))
     .join("");
+}
+
+// Texto sem acentos, minúsculo e sem espaços nas pontas — para comparar nomes e fazer buscas
+// ("Saúde " -> "saude")
+function normalizarTexto(texto) {
+  return String(texto)
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
