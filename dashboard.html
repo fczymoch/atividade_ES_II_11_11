@@ -5,21 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | Controle Financeiro</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <!-- app.js e auth.js no <head>: sem sessão, redireciona antes de exibir a página -->
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
 </head>
-<body>
-  <!-- Página provisória para o redirecionamento do login (card 02).
-       O layout completo, a proteção de acesso e o logout são feitos no card 04. -->
-  <main class="container">
-    <h1>Dashboard</h1>
-    <p id="boas-vindas">Login realizado.</p>
+<body class="pagina-app">
+  <header class="app-cabecalho">
+    <div class="app-cabecalho-conteudo">
+      <span class="app-logo"><span aria-hidden="true">💰</span> Controle Financeiro</span>
+      <div class="app-usuario">
+        <span>Olá, <strong id="nome-usuario"></strong></span>
+        <button type="button" id="btn-sair" class="btn btn-secundario btn-pequeno">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="app-nav" aria-label="Navegação principal">
+    <ul>
+      <li><a href="#resumo" data-secao="resumo">Resumo</a></li>
+      <li><a href="#lancamentos" data-secao="lancamentos">Lançamentos</a></li>
+      <li><a href="#categorias" data-secao="categorias">Categorias</a></li>
+    </ul>
+  </nav>
+
+  <main class="app-principal">
+    <section id="resumo" class="secao">
+      <h2>Resumo</h2>
+      <div class="card">
+        <p class="texto-suave">O resumo financeiro e o gráfico serão implementados no card 07.</p>
+      </div>
+    </section>
+
+    <section id="lancamentos" class="secao" hidden>
+      <h2>Lançamentos</h2>
+      <div class="card">
+        <p class="texto-suave">O cadastro de receitas e despesas será implementado no card 05.</p>
+      </div>
+    </section>
+
+    <section id="categorias" class="secao" hidden>
+      <h2>Categorias</h2>
+      <div class="card">
+        <p class="texto-suave">As categorias e os filtros serão implementados no card 06.</p>
+      </div>
+    </section>
   </main>
 
-  <script src="js/app.js"></script>
-  <script>
-    const sessao = obterSessao();
-    if (sessao) {
-      document.getElementById("boas-vindas").textContent = `Olá, ${sessao.nome}! Login realizado.`;
-    }
-  </script>
+  <footer class="app-rodape">
+    <p>Controle Financeiro &middot; Atividade ES II &middot; Equipe do projeto</p>
+  </footer>
+
+  <script src="js/dashboard.js"></script>
 </body>
 </html>
