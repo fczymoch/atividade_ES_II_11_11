@@ -35,7 +35,40 @@
     <section id="resumo" class="secao">
       <h2>Resumo</h2>
       <div class="card">
-        <p class="texto-suave">O resumo financeiro e o gráfico serão implementados no card 07.</p>
+        <div class="filtros-grade resumo-periodo">
+          <div class="campo">
+            <label for="resumo-mes">Mês</label>
+            <select id="resumo-mes"></select>
+          </div>
+          <div class="campo">
+            <label for="resumo-ano">Ano</label>
+            <select id="resumo-ano"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="resumo-cards">
+        <div class="card resumo-item">
+          <span class="resumo-rotulo">Total de receitas</span>
+          <strong id="total-receitas" class="resumo-valor receita">R$ 0,00</strong>
+        </div>
+        <div class="card resumo-item">
+          <span class="resumo-rotulo">Total de despesas</span>
+          <strong id="total-despesas" class="resumo-valor despesa">R$ 0,00</strong>
+        </div>
+        <div class="card resumo-item">
+          <span class="resumo-rotulo" id="rotulo-saldo">Saldo do mês</span>
+          <strong id="saldo-mes" class="resumo-valor">R$ 0,00</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-titulo">Despesas por categoria</h3>
+        <p id="resumo-vazio" class="texto-suave" hidden></p>
+        <div id="resumo-grafico" class="resumo-grafico">
+          <canvas id="grafico-despesas" width="260" height="260" role="img" aria-label="Gráfico de despesas por categoria"></canvas>
+          <ul id="legenda-despesas" class="resumo-legenda"></ul>
+        </div>
       </div>
     </section>
 
@@ -180,5 +213,6 @@
   <script src="js/categorias.js"></script>
   <script src="js/filtros.js"></script>
   <script src="js/transacoes.js"></script>
+  <script src="js/resumo.js"></script>
 </body>
 </html>
