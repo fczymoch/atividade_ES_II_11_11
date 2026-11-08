@@ -1,4 +1,5 @@
 /* ===== Tela de login (card 02) ===== */
+/* Botões, campos e alertas ficam no style.css (componentes reutilizáveis) */
 .pagina-auth {
   min-height: 100vh;
   display: flex;
@@ -37,45 +38,7 @@
   font-size: 0.95rem;
 }
 
-/* ===== Campos ===== */
-.campo {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
-
-.campo label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 0.35rem;
-}
-
-.campo input {
-  width: 100%;
-  padding: 0.7rem 0.8rem;
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--raio);
-  font: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.campo input:focus {
-  outline: none;
-  border-color: var(--cor-primaria);
-  box-shadow: 0 0 0 3px rgba(30, 127, 92, 0.2);
-}
-
-.campo input[aria-invalid="true"] {
-  border-color: var(--cor-despesa);
-}
-
-.campo-erro {
-  color: var(--cor-despesa);
-  font-size: 0.8rem;
-  min-height: 1rem;
-  margin-top: 0.25rem;
-}
-
+/* ===== Campo de senha ===== */
 .campo-senha {
   position: relative;
 }
@@ -97,51 +60,6 @@
   font-weight: 600;
   cursor: pointer;
   padding: 0.3rem 0.5rem;
-}
-
-/* ===== Botões ===== */
-.btn {
-  display: inline-block;
-  padding: 0.75rem 1rem;
-  border: none;
-  border-radius: var(--raio);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-primario {
-  background: var(--cor-primaria);
-  color: #fff;
-}
-
-.btn-primario:hover {
-  background: var(--cor-primaria-escura);
-}
-
-.btn-primario:disabled {
-  opacity: 0.7;
-  cursor: wait;
-}
-
-.btn-bloco {
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-/* ===== Alertas ===== */
-.alerta {
-  padding: 0.75rem 1rem;
-  border-radius: var(--raio);
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-.alerta-erro {
-  background: #fdecec;
-  color: #9b1c1c;
-  border: 1px solid #f5c2c2;
 }
 
 /* ===== Rodapé ===== */
