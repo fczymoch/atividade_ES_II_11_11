@@ -15,6 +15,31 @@ O usuário faz **login**, lança **receitas e despesas**, organiza por **categor
    ```
 2. Abra o `index.html` no navegador (ou use a extensão **Live Server** do VS Code).
 
+## Dados de demonstração
+
+Na primeira vez que o site é aberto, o `js/seed.js` cria **usuários de teste** com lançamentos dos últimos 3 meses. Na tela de login, abra **"Usuários de teste"** e clique num nome para preencher os campos.
+
+| Usuário | E-mail | Senha |
+|---------|--------|-------|
+| Ana Souza | `ana@demo.com` | `demo123` |
+| Bruno Lima | `bruno@demo.com` | `demo123` |
+| Carla Mendes | `carla@demo.com` | `demo123` |
+
+O botão **"Restaurar dados de demonstração"** recria só os dados desses usuários. Os usuários cadastrados pelo site não são apagados.
+
+### Formato dos dados no `localStorage`
+
+```js
+// cf_usuarios
+[{ nome, email, senha /* hash SHA-256 */, criadoEm }]
+
+// cf_sessao
+{ nome, email, loginEm }
+
+// cf_transacoes
+[{ id, email, descricao, valor, tipo /* "receita" | "despesa" */, categoria, data /* "AAAA-MM-DD" */ }]
+```
+
 ## Estrutura de pastas
 
 ```
@@ -41,6 +66,7 @@ O usuário faz **login**, lança **receitas e despesas**, organiza por **categor
 | 06 | Categorias e filtros por mês | `feature/06-categorias-filtros` |
 | 07 | Resumo financeiro (saldo + gráfico) | `feature/07-resumo-grafico` |
 | 08 | Responsividade, documentação e release v1.0.0 | `release/1.0.0` |
+| 09 | Carga de dados e criação de usuários | `feature/09-carga-dados` |
 
 ## Fluxo de trabalho — GitFlow
 

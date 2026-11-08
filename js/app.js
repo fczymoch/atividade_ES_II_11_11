@@ -58,3 +58,8 @@ function normalizarTexto(texto) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 }
+
+// "1 lançamento" / "3 lançamentos" (usado em transacoes.js e categorias.js)
+function textoQuantidade(quantidade) {
+  return `${quantidade} ${quantidade === 1 ? "lançamento" : "lançamentos"}`;
+}
