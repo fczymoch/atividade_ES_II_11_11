@@ -90,6 +90,12 @@ function validarData() {
     mostrarErroCampo(campoData, erroData, "Informe a data.");
     return false;
   }
+  // O input date aceita anos de até 6 dígitos (ex.: 111111); só aceitamos o ano com 4 dígitos
+  const [ano] = campoData.value.split("-");
+  if (!/^[1-9]\d{3}$/.test(ano)) {
+    mostrarErroCampo(campoData, erroData, "Informe a data no formato DD/MM/AAAA, com ano de 4 dígitos.");
+    return false;
+  }
   mostrarErroCampo(campoData, erroData, "");
   return true;
 }
