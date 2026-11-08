@@ -23,6 +23,16 @@ function criarOpcaoFiltro(valor, texto) {
   return opcao;
 }
 
+// Lê ano e mês da data ISO (AAAA-MM-DD) pelo separador, e não por posição fixa,
+// para não errar em anos com mais de 4 dígitos
+function anoDaData(dataISO) {
+  return dataISO.split("-")[0];
+}
+
+function mesDaData(dataISO) {
+  return dataISO.split("-")[1];
+}
+
 // ----- Montagem dos selects -----
 function preencherMeses() {
   filtroMes.replaceChildren(
@@ -35,7 +45,7 @@ function preencherMeses() {
 function atualizarOpcoesAno(lancamentos) {
   const selecionado = filtroAno.value;
   const anos = new Set([String(new Date().getFullYear())]);
-  lancamentos.forEach(t => anos.add(t.data.slice(0, 4)));
+  lancamentos.forEach(t => anos.add(anoDaData(t.data)));
   if (selecionado && selecionado !== "todos") anos.add(selecionado);
 
   const ordenados = [...anos].sort((a, b) => b.localeCompare(a));
@@ -70,8 +80,8 @@ function aplicarFiltros(lancamentos) {
   const busca = normalizarTexto(filtroBusca.value);
 
   return lancamentos.filter(t =>
-    (mes === "todos" || t.data.slice(5, 7) === mes) &&
-    (ano === "todos" || t.data.slice(0, 4) === ano) &&
+    (mes === "todos" || mesDaData(t.data) === mes) &&
+    (ano === "todos" || anoDaData(t.data) === ano) &&
     (tipo === "todos" || t.tipo === tipo) &&
     (categoria === "todas" || t.categoria === categoria) &&
     (!busca || normalizarTexto(t.descricao).includes(busca))

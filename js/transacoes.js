@@ -75,8 +75,50 @@ function validarDescricao() {
   return true;
 }
 
+// ----- Campo de valor: máscara 1.234,56 (milhar com ponto, no máximo 2 casas decimais) -----
+function formatarValorDigitado(texto) {
+  const limpo = texto.replace(/[^\d,]/g, "");
+  const posVirgula = limpo.indexOf(",");
+  const temDecimal = posVirgula !== -1;
+  const decimal = temDecimal ? limpo.slice(posVirgula + 1).replace(/,/g, "").slice(0, 2) : "";
+  const inteiroBruto = temDecimal ? limpo.slice(0, posVirgula) : limpo;
+  const inteiro = inteiroBruto
+    .replace(/^0+(?=\d)/, "")
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return temDecimal ? `${inteiro || "0"},${decimal}` : inteiro;
+}
+
+// Converte o texto do campo ("1.234,56") em número (1234.56)
+function lerValorCampo() {
+  return Number(campoValor.value.replace(/\./g, "").replace(",", "."));
+}
+
+// Reformata mantendo o cursor no mesmo dígito, mesmo editando no meio do número
+campoValor.addEventListener("input", () => {
+  const cursor = campoValor.selectionStart;
+  const significativosAntes = campoValor.value.slice(0, cursor).replace(/[^\d,]/g, "").length;
+  const formatado = formatarValorDigitado(campoValor.value);
+  campoValor.value = formatado;
+
+  let novaPosicao = 0;
+  let contados = 0;
+  while (novaPosicao < formatado.length && contados < significativosAntes) {
+    if (/[\d,]/.test(formatado[novaPosicao])) contados++;
+    novaPosicao++;
+  }
+  campoValor.setSelectionRange(novaPosicao, novaPosicao);
+});
+
+// "." digitado vira vírgula decimal (o ponto de milhar é colocado automaticamente)
+campoValor.addEventListener("keydown", evento => {
+  if (evento.key !== "." || evento.ctrlKey || evento.metaKey) return;
+  evento.preventDefault();
+  campoValor.setRangeText(",", campoValor.selectionStart, campoValor.selectionEnd, "end");
+  campoValor.dispatchEvent(new Event("input"));
+});
+
 function validarValor() {
-  const valor = Number(campoValor.value);
+  const valor = lerValorCampo();
   if (campoValor.value === "" || !Number.isFinite(valor) || valor <= 0) {
     mostrarErroCampo(campoValor, erroValor, "Informe um valor maior que zero.");
     return false;
@@ -88,6 +130,12 @@ function validarValor() {
 function validarData() {
   if (!campoData.value) {
     mostrarErroCampo(campoData, erroData, "Informe a data.");
+    return false;
+  }
+  // O input date aceita anos de até 6 dígitos (ex.: 111111); só aceitamos o ano com 4 dígitos
+  const [ano] = campoData.value.split("-");
+  if (!/^[1-9]\d{3}$/.test(ano)) {
+    mostrarErroCampo(campoData, erroData, "Informe a data no formato DD/MM/AAAA, com ano de 4 dígitos.");
     return false;
   }
   mostrarErroCampo(campoData, erroData, "");
@@ -118,7 +166,7 @@ function iniciarEdicao(id) {
   idEditando = id;
   idExcluindo = null;
   campoDescricao.value = transacao.descricao;
-  campoValor.value = transacao.valor;
+  campoValor.value = formatarValorDigitado(transacao.valor.toFixed(2).replace(".", ","));
   campoTipo.value = transacao.tipo;
   // categoria que não existe mais na lista não pode sumir da edição
   if (![...campoCategoria.options].some(o => o.value === transacao.categoria)) {
@@ -151,7 +199,7 @@ formLancamento.addEventListener("submit", evento => {
 
   const dados = {
     descricao: campoDescricao.value.trim(),
-    valor: Math.round(Number(campoValor.value) * 100) / 100,
+    valor: Math.round(lerValorCampo() * 100) / 100,
     tipo: campoTipo.value === "receita" ? "receita" : "despesa",
     categoria: campoCategoria.value,
     data: campoData.value
