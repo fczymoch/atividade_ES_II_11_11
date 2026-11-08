@@ -1,0 +1,43 @@
+/* ===== Variáveis globais ===== */
+:root {
+  --cor-primaria: #1e7f5c;
+  --cor-primaria-escura: #145c42;
+  --cor-receita: #1e9e5a;
+  --cor-despesa: #d64545;
+  --cor-fundo: #f4f6f8;
+  --cor-card: #ffffff;
+  --cor-texto: #1f2933;
+  --cor-texto-suave: #616e7c;
+  --cor-borda: #d9dee3;
+  --raio: 8px;
+  --sombra: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ===== Reset básico ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--fonte);
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  line-height: 1.5;
+}
+
+/* ===== Layout ===== */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+h1 {
+  color: var(--cor-primaria);
+  margin-bottom: 1rem;
+}
