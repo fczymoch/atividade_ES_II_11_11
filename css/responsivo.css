@@ -1,0 +1,153 @@
+/* ===== Responsividade (card 08) =====
+   Tablet: até 900px | Celular: até 600px. Carregar por último. */
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+img,
+canvas {
+  max-width: 100%;
+}
+
+/* ---------- Tablet (até 900px) ---------- */
+@media (max-width: 900px) {
+  .app-principal {
+    padding: 1.25rem 1rem;
+  }
+
+  .form-grade,
+  .filtros-grade {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .campo-busca,
+  .campo-limpar {
+    grid-column: 1 / -1;
+  }
+
+  .resumo-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .resumo-cards .resumo-item:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- Celular (até 600px) ---------- */
+@media (max-width: 600px) {
+  .form-grade,
+  .filtros-grade,
+  .resumo-cards,
+  .resumo-periodo {
+    grid-template-columns: 1fr;
+  }
+
+  .resumo-cards .resumo-item:last-child {
+    grid-column: auto;
+  }
+
+  .app-cabecalho-conteudo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .app-usuario {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .app-nav a {
+    padding: 0.75rem 0.85rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .form-acoes .btn {
+    flex: 1 1 100%;
+  }
+
+  .categoria-form .btn {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .resumo-grafico {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .resumo-legenda {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .legenda-item,
+  .resumo-legenda li {
+    flex-wrap: wrap;
+  }
+
+  /* Tabela de lançamentos vira lista de cartões (sem rolagem horizontal) */
+  .tabela-wrapper {
+    overflow-x: visible;
+  }
+
+  .tabela,
+  .tabela tbody,
+  .tabela tr,
+  .tabela td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabela thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .tabela tr {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+
+  .tabela td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.3rem 0;
+    border-bottom: none;
+    text-align: right !important;
+    overflow-wrap: anywhere;
+  }
+
+  .tabela td::before {
+    content: attr(data-rotulo);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--cor-texto-suave);
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  .tabela td.col-acoes {
+    justify-content: flex-end;
+  }
+
+  .tabela td.col-acoes::before {
+    display: none;
+  }
+
+  .auth-card {
+    padding: 1.5rem 1.1rem;
+  }
+}
