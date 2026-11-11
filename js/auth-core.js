@@ -9,7 +9,7 @@
   "use strict";
 
   const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const TAMANHO_MINIMO_SENHA = 6;
+  const TAMANHO_MINIMO_SENHA = 8;
 
   const MENSAGENS = {
     emailVazio: "Informe seu e-mail.",
