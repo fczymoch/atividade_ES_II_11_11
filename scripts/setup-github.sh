@@ -7,7 +7,7 @@
 set -euo pipefail
 
 OWNER="fczymoch"
-REPO_NAME="atividade_ES_II_11_11"
+REPO_NAME="controle-financeiro"
 REPO="$OWNER/$REPO_NAME"
 REMOTE_URL="https://github.com/$REPO.git"
 PROJECT_TITLE="Controle Financeiro - ES II"

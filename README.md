@@ -9,8 +9,8 @@ O usuário faz **login**, lança **receitas e despesas**, organiza por **categor
 
 1. Clone o repositório (a branch `main` tem a versão estável **v1.0.0**):
    ```bash
-   git clone https://github.com/fczymoch/atividade_ES_II_11_11.git
-   cd atividade_ES_II_11_11
+   git clone https://github.com/fczymoch/controle-financeiro.git
+   cd controle-financeiro
    ```
 2. Abra o `index.html` no navegador (ou use a extensão **Live Server** do VS Code).
 
