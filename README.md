@@ -38,8 +38,10 @@ Os testes ficam em `tests/` e testam o `js/auth-core.js`, onde estão as regras 
 | L2 | E-mail e senha corretos retornam sucesso e identificam o usuário (sessão em `cf_sessao`) | T2 (`tests/l2-login-sucesso.test.js`) |
 | L3 | Senha errada retorna erro sem dizer se foi o e-mail ou a senha | T3 (`tests/l3-senha-errada.test.js`) |
 | L4 | E-mail vazio ou sem @ é rejeitado antes de consultar os usuários | T4 (`tests/l4-validacao-email.test.js`) |
-| L5 | Após 3 senhas erradas seguidas, a conta bloqueia por 10 minutos | T5 |
+| L5 | Após 3 senhas erradas seguidas, a conta bloqueia por 10 minutos | T5 (`tests/l5-bloqueio-conta.test.js`) |
 | L6 | Senha com menos de 8 caracteres é rejeitada no cadastro | T6 (`tests/l6-senha-minima.test.js`) |
+
+**Bloqueio (L5):** durante os 10 minutos o login é recusado mesmo com a senha certa; passado esse tempo ele volta a funcionar, e um login com sucesso zera o contador. Como não há backend, o controle fica no navegador (`cf_tentativas`): dificulta tentativas pela tela de login, mas não impede quem mexe direto no `localStorage` ou no relógio do computador.
 
 Não existe usuário fixo no código: para entrar, crie uma conta em **Criar conta**.
 
@@ -51,6 +53,9 @@ Não existe usuário fixo no código: para entrar, crie uma conta em **Criar con
 
 // cf_sessao
 { nome, email, loginEm }
+
+// cf_tentativas (bloqueio de login, L5)
+{ "ana@demo.com": { falhas, bloqueadoAte /* ms desde 1970; 0 = sem bloqueio */ } }
 
 // cf_transacoes
 [{ id, email, descricao, valor, tipo /* "receita" | "despesa" */, categoria, data /* "AAAA-MM-DD" */ }]

@@ -15,7 +15,7 @@ const btnEntrar = document.getElementById("btn-entrar");
 const btnMostrarSenha = document.getElementById("btn-mostrar-senha");
 
 // Regras de login ficam no auth-core.js (testadas com npm test)
-const auth = AuthCore.criarAuth({ armazenamento: AuthCore.criarArmazenamentoLocal(STORAGE_KEYS.usuarios, STORAGE_KEYS.sessao) });
+const auth = AuthCore.criarAuth({ armazenamento: AuthCore.criarArmazenamentoLocal(STORAGE_KEYS.usuarios, STORAGE_KEYS.sessao, STORAGE_KEYS.tentativas) });
 
 // ----- Mensagens -----
 function mostrarErroCampo(campo, elementoErro, texto) {
@@ -62,7 +62,12 @@ form.addEventListener("submit", async evento => {
   const resultado = await auth.entrar(campoEmail.value, campoSenha.value);
 
   if (!resultado.ok) {
-    mostrarErroGeral(resultado.erro);
+    // L5: mostra quantas tentativas ainda restam antes do bloqueio temporário
+    const restam = resultado.tentativasRestantes;
+    const aviso = restam
+      ? ` Restam ${restam} ${restam === 1 ? "tentativa" : "tentativas"} antes do bloqueio temporário.`
+      : "";
+    mostrarErroGeral(resultado.erro + aviso);
     campoSenha.value = "";
     campoSenha.focus();
     btnEntrar.disabled = false;

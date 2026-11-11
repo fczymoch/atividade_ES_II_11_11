@@ -10,6 +10,8 @@
 
   const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const TAMANHO_MINIMO_SENHA = 8;
+  const MAX_TENTATIVAS_LOGIN = 3;                  // L5: senhas erradas seguidas até bloquear
+  const DURACAO_BLOQUEIO_MS = 10 * 60 * 1000;      // L5: 10 minutos
 
   const MENSAGENS = {
     emailVazio: "Informe seu e-mail.",
@@ -19,8 +21,21 @@
     senhaCurta: `A senha deve ter no mínimo ${TAMANHO_MINIMO_SENHA} caracteres.`,
     emailJaCadastrado: "Este e-mail já está cadastrado.",
     semCriptografia: "Não foi possível criar a conta: este navegador não oferece criptografia segura (crypto.subtle). Abra o sistema por https ou localhost.",
-    credenciaisInvalidas: "E-mail ou senha incorretos."
+    credenciaisInvalidas: "E-mail ou senha incorretos.",
+    contaBloqueada: "Conta bloqueada temporariamente por excesso de tentativas com senha incorreta."
   };
+
+  // ----- L5: texto do bloqueio ("10 minutos", "1 minuto", "45 segundos") -----
+  function formatarTempoRestante(ms) {
+    const segundos = Math.ceil(ms / 1000);
+    if (segundos < 60) return `${segundos} ${segundos === 1 ? "segundo" : "segundos"}`;
+    const minutos = Math.ceil(segundos / 60);
+    return `${minutos} ${minutos === 1 ? "minuto" : "minutos"}`;
+  }
+
+  function mensagemContaBloqueada(restanteMs) {
+    return `${MENSAGENS.contaBloqueada} Tente novamente em ${formatarTempoRestante(restanteMs)}.`;
+  }
 
   // ----- L4: validação de e-mail (não consulta nenhum dado) -----
   function validarEmail(email) {
@@ -61,11 +76,70 @@
   }
 
   // ----- Serviço de autenticação -----
-  // armazenamento: objeto com lerUsuarios() e salvarUsuarios(lista).
+  // armazenamento: objeto com lerUsuarios() e salvarUsuarios(lista) e, para o bloqueio (L5),
+  //   lerTentativas() e salvarTentativas(objeto). Sem elas, as tentativas ficam só em memória.
   //   No navegador: criarArmazenamentoLocal(); nos testes: um armazenamento em memória.
   // agora: função que devolve o horário atual em ms (trocável nos testes de tempo).
   function criarAuth({ armazenamento, agora = () => Date.now(), hash = gerarHash } = {}) {
     if (!armazenamento) throw new Error("criarAuth precisa de um armazenamento");
+
+    // ----- L5: bloqueio após 3 senhas erradas seguidas -----
+    // Por e-mail (em minúsculas): { falhas, bloqueadoAte /* ms; 0 = sem bloqueio */ }
+    let tentativasEmMemoria = {};
+    const lerTentativas = () => (typeof armazenamento.lerTentativas === "function"
+      ? armazenamento.lerTentativas()
+      : tentativasEmMemoria);
+    const salvarTentativas = objeto => {
+      if (typeof armazenamento.salvarTentativas === "function") armazenamento.salvarTentativas(objeto);
+      else tentativasEmMemoria = objeto;
+    };
+
+    // Milissegundos que faltam para o bloqueio acabar (0 = não bloqueado).
+    // Bloqueio vencido é descartado: o contador volta a zero.
+    function restanteBloqueio(email) {
+      const todas = lerTentativas();
+      const chave = email.toLowerCase();
+      const registro = todas[chave];
+      if (!registro || !registro.bloqueadoAte) return 0;
+
+      const restante = registro.bloqueadoAte - agora();
+      if (restante <= 0) {
+        delete todas[chave];
+        salvarTentativas(todas);
+        return 0;
+      }
+      return restante;
+    }
+
+    function registrarFalha(email) {
+      const todas = lerTentativas();
+      const chave = email.toLowerCase();
+      const falhas = ((todas[chave] && todas[chave].falhas) || 0) + 1;
+
+      if (falhas >= MAX_TENTATIVAS_LOGIN) {
+        todas[chave] = { falhas, bloqueadoAte: agora() + DURACAO_BLOQUEIO_MS };
+        salvarTentativas(todas);
+        return { bloqueado: true, restanteMs: DURACAO_BLOQUEIO_MS };
+      }
+      todas[chave] = { falhas, bloqueadoAte: 0 };
+      salvarTentativas(todas);
+      return { bloqueado: false, tentativasRestantes: MAX_TENTATIVAS_LOGIN - falhas };
+    }
+
+    function zerarTentativas(email) {
+      const todas = lerTentativas();
+      if (todas[email.toLowerCase()]) {
+        delete todas[email.toLowerCase()];
+        salvarTentativas(todas);
+      }
+    }
+
+    const respostaBloqueada = restanteMs => ({
+      ok: false,
+      bloqueado: true,
+      restanteMs,
+      erro: mensagemContaBloqueada(restanteMs)
+    });
 
     async function cadastrar({ nome, email, senha } = {}) {
       // L4: o e-mail é validado antes de qualquer consulta aos usuários
@@ -102,18 +176,33 @@
       // L4: o e-mail é validado antes de qualquer consulta aos usuários
       const validacaoEmail = validarEmail(email);
       if (!validacaoEmail.ok) return { ok: false, campo: "email", erro: validacaoEmail.erro };
+
+      // L5: conta bloqueada recusa o login mesmo com a senha certa (a senha nem é conferida)
+      const restante = restanteBloqueio(validacaoEmail.email);
+      if (restante > 0) return respostaBloqueada(restante);
+
       if (!senha) return { ok: false, campo: "senha", erro: MENSAGENS.senhaVazia };
 
       const usuarios = armazenamento.lerUsuarios();
       const usuario = usuarios.find(u => mesmoEmail(u.email, validacaoEmail.email));
 
-      // L3: a mesma mensagem para e-mail inexistente e senha errada
-      if (!usuario) return { ok: false, erro: MENSAGENS.credenciaisInvalidas };
+      // L3: a mesma mensagem para e-mail inexistente e senha errada.
+      // L5: os dois casos contam como tentativa errada (não revela quais e-mails existem).
+      const falhaDeLogin = () => {
+        const estado = registrarFalha(validacaoEmail.email);
+        if (estado.bloqueado) return respostaBloqueada(estado.restanteMs);
+        return { ok: false, erro: MENSAGENS.credenciaisInvalidas, tentativasRestantes: estado.tentativasRestantes };
+      };
+
+      if (!usuario) return falhaDeLogin();
       // Compara hash com hash; o texto digitado só é comparado direto se não houver hash
       // disponível (assim ninguém entra digitando o próprio hash guardado).
       const hashDigitado = await hash(senha);
       const senhaConfere = hashDigitado !== null ? usuario.senha === hashDigitado : usuario.senha === senha;
-      if (!senhaConfere) return { ok: false, erro: MENSAGENS.credenciaisInvalidas };
+      if (!senhaConfere) return falhaDeLogin();
+
+      // L5: login com sucesso zera o contador de tentativas erradas
+      zerarTentativas(validacaoEmail.email);
 
       // L2: sucesso identifica o usuário (nunca devolve a senha)
       return { ok: true, usuario: { nome: usuario.nome, email: usuario.email } };
@@ -135,8 +224,8 @@
     return { cadastrar, autenticar, entrar };
   }
 
-  // Armazenamento do navegador (localStorage, chaves cf_usuarios e cf_sessao)
-  function criarArmazenamentoLocal(chave = "cf_usuarios", chaveSessao = "cf_sessao") {
+  // Armazenamento do navegador (localStorage: cf_usuarios, cf_sessao e cf_tentativas)
+  function criarArmazenamentoLocal(chave = "cf_usuarios", chaveSessao = "cf_sessao", chaveTentativas = "cf_tentativas") {
     return {
       lerUsuarios() {
         try {
@@ -150,6 +239,16 @@
       },
       salvarSessao(sessao) {
         localStorage.setItem(chaveSessao, JSON.stringify(sessao));
+      },
+      lerTentativas() {
+        try {
+          return JSON.parse(localStorage.getItem(chaveTentativas)) || {};
+        } catch {
+          return {};
+        }
+      },
+      salvarTentativas(objeto) {
+        localStorage.setItem(chaveTentativas, JSON.stringify(objeto));
       }
     };
   }
@@ -157,6 +256,10 @@
   const AuthCore = {
     MENSAGENS,
     TAMANHO_MINIMO_SENHA,
+    MAX_TENTATIVAS_LOGIN,
+    DURACAO_BLOQUEIO_MS,
+    formatarTempoRestante,
+    mensagemContaBloqueada,
     validarEmail,
     validarSenhaCadastro,
     gerarHash,

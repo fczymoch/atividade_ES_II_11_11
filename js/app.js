@@ -4,7 +4,8 @@ const STORAGE_KEYS = {
   usuarios: "cf_usuarios",   // lista de usuários cadastrados (card 03)
   sessao: "cf_sessao",       // usuário logado (cards 02 e 04)
   transacoes: "cf_transacoes", // lançamentos por usuário (card 05)
-  categorias: "cf_categorias"  // categorias criadas pelos usuários (card 06)
+  categorias: "cf_categorias", // categorias criadas pelos usuários (card 06)
+  tentativas: "cf_tentativas"  // falhas de login e bloqueio temporário por e-mail (L5)
 };
 
 // Formata número como moeda brasileira: 1234.5 -> "R$ 1.234,50"
