@@ -2,8 +2,8 @@
 :root {
   --cor-primaria: #1e7f5c;
   --cor-primaria-escura: #145c42;
-  --cor-receita: #1e9e5a;
-  --cor-despesa: #d64545;
+  --cor-receita: #167a45;
+  --cor-despesa: #c0392b;
   --cor-fundo: #f4f6f8;
   --cor-card: #ffffff;
   --cor-texto: #1f2933;
@@ -40,4 +40,182 @@ body {
 h1 {
   color: var(--cor-primaria);
   margin-bottom: 1rem;
+}
+
+/* ===== Componentes reutilizáveis (card 04) ===== */
+
+/* Campos de formulário */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.campo label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+
+.input,
+.campo input,
+.campo select {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background: #fff;
+  font: inherit;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus,
+.campo input:focus,
+.campo select:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(30, 127, 92, 0.2);
+}
+
+.input[aria-invalid="true"],
+.campo input[aria-invalid="true"] {
+  border-color: var(--cor-despesa);
+}
+
+.campo-erro {
+  color: var(--cor-despesa);
+  font-size: 0.8rem;
+  min-height: 1rem;
+  margin-top: 0.25rem;
+}
+
+/* Botões */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--raio);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-primario {
+  background: var(--cor-primaria);
+  color: #fff;
+}
+
+.btn-primario:hover {
+  background: var(--cor-primaria-escura);
+}
+
+.btn-primario:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.btn-secundario {
+  background: transparent;
+  color: var(--cor-primaria);
+  border: 1px solid var(--cor-primaria);
+}
+
+.btn-secundario:hover {
+  background: var(--cor-primaria);
+  color: #fff;
+}
+
+.btn-perigo {
+  background: var(--cor-despesa);
+  color: #fff;
+}
+
+.btn-perigo:hover {
+  background: #b53030;
+}
+
+.btn-pequeno {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+.btn-bloco {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Alertas */
+.alerta {
+  padding: 0.75rem 1rem;
+  border-radius: var(--raio);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.alerta-erro {
+  background: #fdecec;
+  color: #9b1c1c;
+  border: 1px solid #f5c2c2;
+}
+
+.alerta-sucesso {
+  background: #e8f6ee;
+  color: #14683f;
+  border: 1px solid #b7e1c8;
+}
+
+/* Cards */
+.card {
+  background: var(--cor-card);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  padding: 1.25rem;
+}
+
+.card-titulo {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: var(--cor-texto);
+}
+
+/* Tabela */
+.tabela-wrapper {
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--cor-card);
+}
+
+.tabela th,
+.tabela td {
+  padding: 0.7rem 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.tabela th {
+  background: var(--cor-fundo);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--cor-texto-suave);
+}
+
+.tabela tbody tr:hover {
+  background: #f9fafb;
+}
+
+.tabela .receita {
+  color: var(--cor-receita);
+  font-weight: 600;
+}
+
+.tabela .despesa {
+  color: var(--cor-despesa);
+  font-weight: 600;
 }

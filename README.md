@@ -7,13 +7,50 @@ O usuário faz **login**, lança **receitas e despesas**, organiza por **categor
 
 ## Como rodar
 
-1. Clone o repositório e mude para a branch `develop`:
+1. Clone o repositório (a branch `main` tem a versão estável **v1.0.0**):
    ```bash
    git clone https://github.com/fczymoch/atividade_ES_II_11_11.git
    cd atividade_ES_II_11_11
-   git checkout develop
    ```
 2. Abra o `index.html` no navegador (ou use a extensão **Live Server** do VS Code).
+
+## Dados de demonstração
+
+Na primeira vez que o site é aberto, o `js/seed.js` cria **usuários de teste** com lançamentos dos últimos 3 meses. Na tela de login, abra **"Usuários de teste"** e clique num nome para preencher os campos.
+
+| Usuário | E-mail | Senha |
+|---------|--------|-------|
+| Ana Souza | `ana@demo.com` | `demo123` |
+| Bruno Lima | `bruno@demo.com` | `demo123` |
+| Carla Mendes | `carla@demo.com` | `demo123` |
+
+O botão **"Restaurar dados de demonstração"** recria só os dados desses usuários. Os usuários cadastrados pelo site não são apagados.
+
+### Formato dos dados no `localStorage`
+
+```js
+// cf_usuarios
+[{ nome, email, senha /* hash SHA-256 */, criadoEm }]
+
+// cf_sessao
+{ nome, email, loginEm }
+
+// cf_transacoes
+[{ id, email, descricao, valor, tipo /* "receita" | "despesa" */, categoria, data /* "AAAA-MM-DD" */ }]
+```
+
+## Telas
+
+> Substitua os arquivos em `docs/prints/` pelos prints reais (mesmos nomes).
+
+| Tela | Print |
+|------|-------|
+| Login | ![Login](docs/prints/login.png) |
+| Cadastro | ![Cadastro](docs/prints/cadastro.png) |
+| Resumo e gráfico | ![Resumo](docs/prints/resumo.png) |
+| Lançamentos e filtros | ![Lançamentos](docs/prints/lancamentos.png) |
+| Categorias | ![Categorias](docs/prints/categorias.png) |
+| Versão para celular | ![Celular](docs/prints/celular.png) |
 
 ## Estrutura de pastas
 
@@ -21,13 +58,16 @@ O usuário faz **login**, lança **receitas e despesas**, organiza por **categor
 ├── index.html          # Tela de login (card 02)
 ├── cadastro.html       # Cadastro de usuário (card 03)
 ├── dashboard.html      # Área logada (cards 04 a 07)
-├── css/
-│   └── style.css       # Estilos globais e variáveis
-├── js/
-│   └── app.js          # Utilitários compartilhados
+├── css/                # Estilos (style.css = globais; responsivo.css = celular e tablet)
+├── js/                 # Scripts de cada tela (app.js = utilitários compartilhados)
+├── docs/prints/        # Prints das telas usados neste README
 ├── scripts/            # Setup do GitHub (labels, issues, board)
 └── .github/            # Templates de issue e pull request
 ```
+
+## Responsividade
+
+O layout se adapta a **tablet (até 900px)** e **celular (até 600px)**, sem rolagem horizontal. No celular, a tabela de lançamentos vira uma lista de cartões. Os estilos ficam em `css/responsivo.css`.
 
 ## Funcionalidades (cards do board)
 
@@ -41,6 +81,7 @@ O usuário faz **login**, lança **receitas e despesas**, organiza por **categor
 | 06 | Categorias e filtros por mês | `feature/06-categorias-filtros` |
 | 07 | Resumo financeiro (saldo + gráfico) | `feature/07-resumo-grafico` |
 | 08 | Responsividade, documentação e release v1.0.0 | `release/1.0.0` |
+| 09 | Carga de dados e criação de usuários | `feature/09-carga-dados` |
 
 ## Fluxo de trabalho — GitFlow
 

@@ -1,0 +1,77 @@
+/* ===== Lançamentos (card 05) ===== */
+.secao .card + .card {
+  margin-top: 1rem;
+}
+
+.form-grade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0 1rem;
+}
+
+.campo-largo {
+  grid-column: 1 / -1;
+}
+
+.form-acoes {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.card-tabela {
+  padding: 1.25rem 0 0;
+}
+
+.card-tabela .card-titulo,
+.card-tabela > p {
+  padding: 0 1.25rem;
+}
+
+.card-tabela > p {
+  padding-bottom: 1.25rem;
+}
+
+.col-valor {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.col-acoes {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.acoes-linha {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.texto-confirma {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cor-despesa);
+}
+
+.tabela tr.linha-editando {
+  background: #fff8e1;
+}
+
+.tabela tr.linha-excluindo {
+  background: #fdecec;
+}
+
+@media (max-width: 700px) {
+  .form-grade {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .form-grade {
+    grid-template-columns: 1fr;
+  }
+}

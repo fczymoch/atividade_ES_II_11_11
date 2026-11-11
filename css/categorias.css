@@ -1,0 +1,104 @@
+/* ===== Categorias e filtros (card 06) ===== */
+
+/* Filtros */
+.filtros-grade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0 1rem;
+  align-items: end;
+}
+
+.campo-busca {
+  grid-column: span 3;
+}
+
+.campo-limpar .btn {
+  width: 100%;
+  margin-bottom: 1.25rem; /* alinha com os campos, que reservam espaço para a mensagem de erro */
+}
+
+.contagem-lancamentos {
+  font-size: 0.85rem;
+  padding-bottom: 0.5rem !important;
+}
+
+.contagem-lancamentos:empty {
+  display: none;
+}
+
+/* Nova categoria */
+.categoria-form {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.categoria-form .campo {
+  flex: 1 1 240px;
+}
+
+.categoria-form .btn {
+  margin-top: 1.55rem;
+}
+
+/* Lista de categorias */
+.lista-categorias {
+  list-style: none;
+}
+
+.item-categoria {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.item-categoria:last-child {
+  border-bottom: none;
+}
+
+.item-categoria-nome {
+  font-weight: 600;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.item-categoria-uso {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.selo-padrao {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--cor-fundo);
+  color: var(--cor-texto-suave);
+  border: 1px solid var(--cor-borda);
+}
+
+@media (max-width: 700px) {
+  .filtros-grade {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .campo-busca {
+    grid-column: 1 / -1;
+  }
+
+  .campo-limpar {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 420px) {
+  .filtros-grade {
+    grid-template-columns: 1fr;
+  }
+
+  .item-categoria {
+    flex-wrap: wrap;
+  }
+}

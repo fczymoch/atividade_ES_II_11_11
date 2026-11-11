@@ -1,0 +1,200 @@
+/* ===== Layout da área logada (card 04) ===== */
+.pagina-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cabeçalho */
+.app-cabecalho {
+  background: var(--cor-primaria);
+  color: #fff;
+  box-shadow: var(--sombra);
+}
+
+.app-cabecalho-conteudo {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.app-logo {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.app-usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.app-cabecalho .btn-secundario {
+  color: #fff;
+  border-color: #fff;
+}
+
+.app-cabecalho .btn-secundario:hover {
+  background: #fff;
+  color: var(--cor-primaria);
+}
+
+/* Navegação */
+.app-nav {
+  background: var(--cor-card);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.app-nav ul {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  list-style: none;
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+}
+
+.app-nav a {
+  display: block;
+  padding: 0.85rem 1rem;
+  color: var(--cor-texto-suave);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+
+.app-nav a:hover {
+  color: var(--cor-primaria);
+}
+
+.app-nav a[aria-current="page"] {
+  color: var(--cor-primaria);
+  border-bottom-color: var(--cor-primaria);
+}
+
+/* Conteúdo */
+.app-principal {
+  flex: 1;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.secao h2 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.secao[hidden] {
+  display: none;
+}
+
+.texto-suave {
+  color: var(--cor-texto-suave);
+}
+
+/* Rodapé */
+.app-rodape {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+  border-top: 1px solid var(--cor-borda);
+  background: var(--cor-card);
+}
+
+@media (max-width: 600px) {
+  .app-cabecalho-conteudo {
+    flex-wrap: wrap;
+  }
+}
+
+/* ===== Resumo financeiro (card 07) ===== */
+.resumo-periodo {
+  grid-template-columns: repeat(2, minmax(0, 220px));
+}
+
+.resumo-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.resumo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.resumo-rotulo {
+  font-size: 0.9rem;
+  color: var(--cor-texto-suave);
+}
+
+.resumo-valor {
+  font-size: 1.5rem;
+}
+
+.resumo-grafico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.resumo-grafico[hidden] {
+  display: none;
+}
+
+.resumo-legenda {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 220px;
+}
+
+.resumo-legenda li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legenda-cor {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legenda-nome {
+  flex: 1;
+}
+
+.legenda-valor {
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .resumo-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.resumo-valor.receita {
+  color: var(--cor-receita);
+}
+
+.resumo-valor.despesa {
+  color: var(--cor-despesa);
+}
