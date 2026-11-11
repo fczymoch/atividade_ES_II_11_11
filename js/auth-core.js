@@ -18,6 +18,7 @@
     senhaVazia: "Informe sua senha.",
     senhaCurta: `A senha deve ter no mínimo ${TAMANHO_MINIMO_SENHA} caracteres.`,
     emailJaCadastrado: "Este e-mail já está cadastrado.",
+    semCriptografia: "Não foi possível criar a conta: este navegador não oferece criptografia segura (crypto.subtle). Abra o sistema por https ou localhost.",
     credenciaisInvalidas: "E-mail ou senha incorretos. Confira os dados e tente novamente."
   };
 
@@ -82,12 +83,15 @@
         return { ok: false, campo: "email", erro: MENSAGENS.emailJaCadastrado };
       }
 
-      // TODO L1: hoje, sem crypto.subtle, a senha fica em texto puro. Remover esse fallback.
-      const senhaGuardada = (await hash(senha)) ?? senha;
+      // L1: a senha só é gravada como hash SHA-256. Sem crypto.subtle o cadastro é recusado
+      // (não existe mais o fallback que gravava a senha em texto puro).
+      const senhaHash = await hash(senha);
+      if (senhaHash === null) return { ok: false, campo: "senha", erro: MENSAGENS.semCriptografia };
+
       const usuario = {
         nome: nomeLimpo,
         email: validacaoEmail.email,
-        senha: senhaGuardada,
+        senha: senhaHash,
         criadoEm: new Date(agora()).toISOString()
       };
       armazenamento.salvarUsuarios([...usuarios, usuario]);
