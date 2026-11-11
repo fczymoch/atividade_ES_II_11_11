@@ -1,17 +1,20 @@
+Closes #
+
 ## O que foi feito
 
-<!-- Descreva rapidamente a mudança -->
+<!-- Descreva a mudança e qual comportamento (L1 a L6) ela atende -->
 
-## Card relacionado
+## Como testar
 
-Closes #
+<!-- Passo a passo para o revisor conferir. Sempre inclua: -->
+1. `npm test` (todos os testes devem passar)
+2. Abra o `index.html` no navegador e ...
 
 ## Checklist
 
-- [ ] A branch saiu da `develop` e o PR aponta para a `develop`
-- [ ] Testei no navegador (desktop e celular)
-- [ ] Datas aparecem em DD/MM/AAAA e valores em R$
-- [ ] Sem `console.log` esquecido
-- [ ] Pedi revisão para alguém da equipe
-
-## Prints (se houver mudança visual)
+- [ ] A branch foi criada pela issue e o PR aponta para a `main`
+- [ ] Commits no padrão `tipo: o que fez (#N)`
+- [ ] Adicionei ou alterei um teste em `tests/`
+- [ ] `npm test` passando
+- [ ] Testei no navegador
+- [ ] Marquei um colega como revisor

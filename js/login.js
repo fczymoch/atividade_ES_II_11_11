@@ -14,7 +14,8 @@ const mensagemErro = document.getElementById("mensagem-erro");
 const btnEntrar = document.getElementById("btn-entrar");
 const btnMostrarSenha = document.getElementById("btn-mostrar-senha");
 
-const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Regras de login ficam no auth-core.js (testadas com npm test)
+const auth = AuthCore.criarAuth({ armazenamento: AuthCore.criarArmazenamentoLocal(STORAGE_KEYS.usuarios) });
 
 // ----- Mensagens -----
 function mostrarErroCampo(campo, elementoErro, texto) {
@@ -29,17 +30,9 @@ function mostrarErroGeral(texto) {
 
 // ----- Validação dos campos -----
 function validarEmail() {
-  const email = campoEmail.value.trim();
-  if (!email) {
-    mostrarErroCampo(campoEmail, erroEmail, "Informe seu e-mail.");
-    return false;
-  }
-  if (!REGEX_EMAIL.test(email)) {
-    mostrarErroCampo(campoEmail, erroEmail, "Informe um e-mail válido (ex.: voce@exemplo.com).");
-    return false;
-  }
-  mostrarErroCampo(campoEmail, erroEmail, "");
-  return true;
+  const resultado = AuthCore.validarEmail(campoEmail.value);
+  mostrarErroCampo(campoEmail, erroEmail, resultado.ok ? "" : resultado.erro);
+  return resultado.ok;
 }
 
 function validarSenha() {
@@ -49,20 +42,6 @@ function validarSenha() {
   }
   mostrarErroCampo(campoSenha, erroSenha, "");
   return true;
-}
-
-// ----- Conferência das credenciais -----
-// Aceita senha guardada em texto ou como hash SHA-256 (bônus do card 03)
-async function senhaConfere(senhaDigitada, senhaGuardada) {
-  if (senhaDigitada === senhaGuardada) return true;
-  return (await gerarHashSenha(senhaDigitada)) === senhaGuardada;
-}
-
-async function autenticar(email, senha) {
-  const usuarios = lerStorage(STORAGE_KEYS.usuarios, []);
-  const usuario = usuarios.find(u => u.email.toLowerCase() === email.toLowerCase());
-  if (!usuario) return null;
-  return (await senhaConfere(senha, usuario.senha)) ? usuario : null;
 }
 
 // ----- Eventos -----
@@ -80,10 +59,10 @@ form.addEventListener("submit", async evento => {
   btnEntrar.disabled = true;
   btnEntrar.textContent = "Entrando...";
 
-  const usuario = await autenticar(campoEmail.value.trim(), campoSenha.value);
+  const resultado = await auth.autenticar(campoEmail.value, campoSenha.value);
 
-  if (!usuario) {
-    mostrarErroGeral("E-mail ou senha incorretos. Confira os dados e tente novamente.");
+  if (!resultado.ok) {
+    mostrarErroGeral(resultado.erro);
     campoSenha.value = "";
     campoSenha.focus();
     btnEntrar.disabled = false;
@@ -92,6 +71,7 @@ form.addEventListener("submit", async evento => {
   }
 
   // Nunca guardar a senha na sessão
+  const usuario = resultado.usuario;
   salvarStorage(STORAGE_KEYS.sessao, {
     nome: usuario.nome,
     email: usuario.email,
