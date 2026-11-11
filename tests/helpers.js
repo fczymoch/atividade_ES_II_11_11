@@ -6,6 +6,7 @@ const AuthCore = require("../js/auth-core.js");
 // Útil para provar que uma validação acontece ANTES de consultar os dados (L4).
 function criarArmazenamentoMemoria(usuariosIniciais = []) {
   let usuarios = structuredClone(usuariosIniciais);
+  let sessao = null;
   const armazenamento = {
     leituras: 0,
     lerUsuarios() {
@@ -17,6 +18,12 @@ function criarArmazenamentoMemoria(usuariosIniciais = []) {
     },
     usuariosSalvos() {
       return structuredClone(usuarios);
+    },
+    salvarSessao(nova) {
+      sessao = structuredClone(nova);
+    },
+    sessaoSalva() {
+      return sessao === null ? null : structuredClone(sessao);
     }
   };
   return armazenamento;

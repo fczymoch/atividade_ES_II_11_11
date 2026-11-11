@@ -24,6 +24,16 @@ describe("T3 - senha errada (L3)", () => {
     assert.equal(resultado.usuario, undefined);
   });
 
+  test("a mensagem de erro é exatamente a pedida na issue", async () => {
+    const { auth } = await criarCenarioComUsuario();
+
+    const senhaErrada = await auth.autenticar("ana@demo.com", "senha-errada");
+    const emailInexistente = await auth.autenticar("ninguem@demo.com", "senhaforte123");
+
+    assert.equal(senhaErrada.erro, "E-mail ou senha incorretos.");
+    assert.equal(emailInexistente.erro, "E-mail ou senha incorretos.");
+  });
+
   test("e-mail inexistente e senha errada dão exatamente o mesmo erro", async () => {
     const { auth } = await criarCenarioComUsuario();
 
@@ -40,6 +50,46 @@ describe("T3 - senha errada (L3)", () => {
     const resultado = await auth.autenticar("ana@demo.com", guardado.senha);
 
     assert.equal(resultado.ok, false);
+  });
+
+  test("senha errada não cria sessão", async () => {
+    const { auth, armazenamento } = await criarCenarioComUsuario();
+
+    const resultado = await auth.entrar("ana@demo.com", "senha-errada");
+
+    assert.equal(resultado.ok, false);
+    assert.equal(armazenamento.sessaoSalva(), null);
+  });
+
+  test("e-mail não cadastrado não cria sessão", async () => {
+    const { auth, armazenamento } = await criarCenarioComUsuario();
+
+    const resultado = await auth.entrar("ninguem@demo.com", "senhaforte123");
+
+    assert.equal(resultado.ok, false);
+    assert.equal(resultado.erro, "E-mail ou senha incorretos.");
+    assert.equal(armazenamento.sessaoSalva(), null);
+  });
+
+  test("e-mail inválido ou senha vazia também não criam sessão", async () => {
+    const { auth, armazenamento } = await criarCenarioComUsuario();
+
+    await auth.entrar("sem-arroba.com", "senhaforte123");
+    await auth.entrar("ana@demo.com", "");
+
+    assert.equal(armazenamento.sessaoSalva(), null);
+  });
+
+  test("controle: login correto cria a sessão, sem a senha", async () => {
+    const { auth, armazenamento } = await criarCenarioComUsuario();
+
+    const resultado = await auth.entrar("ana@demo.com", "senhaforte123");
+
+    assert.equal(resultado.ok, true);
+    const sessao = armazenamento.sessaoSalva();
+    assert.equal(sessao.email, "ana@demo.com");
+    assert.equal(sessao.nome, "Ana Souza");
+    assert.equal("senha" in sessao, false);
   });
 
   test("senha errada não altera a senha guardada", async () => {
