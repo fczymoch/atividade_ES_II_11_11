@@ -60,6 +60,17 @@ describe("T1 - cadastro com senha em hash (L1)", () => {
     assert.deepEqual(armazenamento.usuariosSalvos(), []);
   });
 
+  test("se o hash não vier no formato SHA-256, o cadastro é recusado e nada é gravado", async () => {
+    const armazenamento = criarArmazenamentoMemoria();
+    const hashQueDevolveTextoPuro = async senha => senha; // simula um hash quebrado
+    const auth = AuthCore.criarAuth({ armazenamento, hash: hashQueDevolveTextoPuro });
+
+    const resultado = await auth.cadastrar(NOVO_USUARIO);
+
+    assert.equal(resultado.ok, false);
+    assert.deepEqual(armazenamento.usuariosSalvos(), []);
+  });
+
   test("e-mail já cadastrado é recusado (sem diferenciar maiúsculas)", async () => {
     const { auth, armazenamento } = criarCenario();
     await auth.cadastrar(NOVO_USUARIO);

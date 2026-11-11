@@ -9,6 +9,7 @@
   "use strict";
 
   const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const REGEX_HASH_SHA256 = /^[0-9a-f]{64}$/; // SHA-256 em hexadecimal: 64 caracteres
   const TAMANHO_MINIMO_SENHA = 6;
 
   const MENSAGENS = {
@@ -86,7 +87,10 @@
       // L1: a senha só é gravada como hash SHA-256. Sem crypto.subtle o cadastro é recusado
       // (não existe mais o fallback que gravava a senha em texto puro).
       const senhaHash = await hash(senha);
-      if (senhaHash === null) return { ok: false, campo: "senha", erro: MENSAGENS.semCriptografia };
+      // Só grava se o resultado for mesmo um SHA-256 (garante que nunca vai texto puro)
+      if (senhaHash === null || !REGEX_HASH_SHA256.test(senhaHash)) {
+        return { ok: false, campo: "senha", erro: MENSAGENS.semCriptografia };
+      }
 
       const usuario = {
         nome: nomeLimpo,
