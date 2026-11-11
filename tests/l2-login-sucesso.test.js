@@ -43,11 +43,11 @@ describe("T2 - login com sucesso (L2)", () => {
     assert.equal(resultado.usuario.email, "ana@demo.com");
   });
 
-  test("entra com um usuário que já estava guardado com hash (como os de demonstração)", async () => {
-    const hash = await AuthCore.gerarHash("demo123");
+  test("entra com um usuário que já estava guardado com hash", async () => {
+    const hash = await AuthCore.gerarHash("senhaforte123");
     const { auth } = criarCenario([{ nome: "Bruno Lima", email: "bruno@demo.com", senha: hash }]);
 
-    const resultado = await auth.autenticar("bruno@demo.com", "demo123");
+    const resultado = await auth.autenticar("bruno@demo.com", "senhaforte123");
 
     assert.equal(resultado.ok, true);
     assert.equal(resultado.usuario.nome, "Bruno Lima");
