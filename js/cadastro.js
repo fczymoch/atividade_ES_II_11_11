@@ -19,9 +19,10 @@ const mensagemSucesso = document.getElementById("mensagem-sucesso");
 const btnCadastrar = document.getElementById("btn-cadastrar");
 const btnMostrarSenha = document.getElementById("btn-mostrar-senha");
 
-const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const TAMANHO_MINIMO_SENHA = 6;
 const TEMPO_REDIRECIONAMENTO_MS = 1500;
+
+// Regras de cadastro ficam no auth-core.js (testadas com npm test)
+const auth = AuthCore.criarAuth({ armazenamento: AuthCore.criarArmazenamentoLocal(STORAGE_KEYS.usuarios) });
 
 // ----- Mensagens -----
 function mostrarErroCampo(campo, elementoErro, texto) {
@@ -45,30 +46,15 @@ function validarNome() {
 }
 
 function validarEmail() {
-  const email = campoEmail.value.trim();
-  if (!email) {
-    mostrarErroCampo(campoEmail, erroEmail, "Informe seu e-mail.");
-    return false;
-  }
-  if (!REGEX_EMAIL.test(email)) {
-    mostrarErroCampo(campoEmail, erroEmail, "Informe um e-mail válido (ex.: voce@exemplo.com).");
-    return false;
-  }
-  mostrarErroCampo(campoEmail, erroEmail, "");
-  return true;
+  const resultado = AuthCore.validarEmail(campoEmail.value);
+  mostrarErroCampo(campoEmail, erroEmail, resultado.ok ? "" : resultado.erro);
+  return resultado.ok;
 }
 
 function validarSenha() {
-  if (!campoSenha.value) {
-    mostrarErroCampo(campoSenha, erroSenha, "Informe uma senha.");
-    return false;
-  }
-  if (campoSenha.value.length < TAMANHO_MINIMO_SENHA) {
-    mostrarErroCampo(campoSenha, erroSenha, `A senha deve ter no mínimo ${TAMANHO_MINIMO_SENHA} caracteres.`);
-    return false;
-  }
-  mostrarErroCampo(campoSenha, erroSenha, "");
-  return true;
+  const resultado = AuthCore.validarSenhaCadastro(campoSenha.value);
+  mostrarErroCampo(campoSenha, erroSenha, resultado.ok ? "" : resultado.erro);
+  return resultado.ok;
 }
 
 function validarConfirmacao() {
@@ -84,26 +70,6 @@ function validarConfirmacao() {
   return true;
 }
 
-// ----- Regras de negócio -----
-function emailJaCadastrado(email) {
-  const usuarios = lerStorage(STORAGE_KEYS.usuarios, []);
-  return usuarios.some(u => u.email.toLowerCase() === email.toLowerCase());
-}
-
-async function salvarUsuario(nome, email, senha) {
-  const usuarios = lerStorage(STORAGE_KEYS.usuarios, []);
-  // Bônus: guarda hash SHA-256. Se crypto.subtle não existir, mantém a senha em texto
-  // (o login do card 02 aceita os dois formatos).
-  const senhaGuardada = (await gerarHashSenha(senha)) ?? senha;
-  usuarios.push({
-    nome,
-    email,
-    senha: senhaGuardada,
-    criadoEm: new Date().toISOString()
-  });
-  salvarStorage(STORAGE_KEYS.usuarios, usuarios);
-}
-
 // ----- Eventos -----
 form.addEventListener("submit", async evento => {
   evento.preventDefault();
@@ -117,25 +83,30 @@ form.addEventListener("submit", async evento => {
     return;
   }
 
-  const nome = campoNome.value.trim();
-  const email = campoEmail.value.trim();
-
-  if (emailJaCadastrado(email)) {
-    mostrarErroCampo(campoEmail, erroEmail, "Este e-mail já está cadastrado.");
-    mostrarErroGeral("Já existe uma conta com este e-mail. Use outro e-mail ou entre na sua conta.");
-    campoEmail.focus();
-    return;
-  }
-
   btnCadastrar.disabled = true;
   btnCadastrar.textContent = "Cadastrando...";
 
+  let resultado;
   try {
-    await salvarUsuario(nome, email, campoSenha.value);
+    resultado = await auth.cadastrar({
+      nome: campoNome.value,
+      email: campoEmail.value,
+      senha: campoSenha.value
+    });
   } catch {
-    mostrarErroGeral("Não foi possível salvar o cadastro. Tente novamente.");
+    resultado = { ok: false, erro: "Não foi possível salvar o cadastro. Tente novamente." };
+  }
+
+  if (!resultado.ok) {
     btnCadastrar.disabled = false;
     btnCadastrar.textContent = "Cadastrar";
+    if (resultado.erro === AuthCore.MENSAGENS.emailJaCadastrado) {
+      mostrarErroCampo(campoEmail, erroEmail, resultado.erro);
+      mostrarErroGeral("Já existe uma conta com este e-mail. Use outro e-mail ou entre na sua conta.");
+      campoEmail.focus();
+    } else {
+      mostrarErroGeral(resultado.erro);
+    }
     return;
   }
 
