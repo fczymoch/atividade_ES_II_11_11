@@ -1,9 +1,9 @@
-# 💰 Controle Financeiro — Atividade ES II
+# 💰 Controle Financeiro
 
 Aplicação web de **controle financeiro pessoal** feita só com **HTML, CSS e JavaScript** (sem frameworks).
 O usuário faz **login**, lança **receitas e despesas**, organiza por **categorias**, filtra por mês e acompanha o **saldo** num resumo com gráfico.
 
-> Projeto acadêmico de Engenharia de Software II. Os dados ficam no `localStorage` do navegador (não há backend).
+> Projeto da disciplina Engenharia de Software II. Os dados ficam no `localStorage` do navegador (não há backend).
 
 ## Como rodar
 
@@ -14,19 +14,36 @@ O usuário faz **login**, lança **receitas e despesas**, organiza por **categor
    ```
 2. Abra o `index.html` no navegador (ou use a extensão **Live Server** do VS Code).
 
-## Dados de demonstração
+## Como rodar os testes
 
-Na primeira vez que o site é aberto, o `js/seed.js` cria **usuários de teste** com lançamentos dos últimos 3 meses. Na tela de login, abra **"Usuários de teste"** e clique num nome para preencher os campos.
+Os testes automatizados usam o test runner nativo do Node (`node:test`), sem instalar dependências.
 
-| Usuário | E-mail | Senha |
-|---------|--------|-------|
-| Ana Souza | `ana@demo.com` | `demo123` |
-| Bruno Lima | `bruno@demo.com` | `demo123` |
-| Carla Mendes | `carla@demo.com` | `demo123` |
+1. Tenha o **Node.js 18 ou mais novo** (`node -v`). No Ubuntu, se a versão do `apt` for antiga:
+   ```bash
+   curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+   sudo apt install -y nodejs
+   ```
+2. Na raiz do projeto, rode:
+   ```bash
+   npm test
+   ```
 
-O botão **"Restaurar dados de demonstração"** recria só os dados desses usuários. Os usuários cadastrados pelo site não são apagados.
+Os testes ficam em `tests/` e testam o `js/auth-core.js`, onde estão as regras de login e cadastro (a mesma lógica usada pelas telas).
 
-### Formato dos dados no `localStorage`
+## Login: comportamentos e testes
+
+| | Comportamento | Teste |
+|---|---|---|
+| L1 | Cadastro com e-mail e senha válidos cria o usuário; a senha é gravada com hash, nunca em texto puro | T1 |
+| L2 | E-mail e senha corretos retornam sucesso e identificam o usuário (sessão em `cf_sessao`) | T2 |
+| L3 | Senha errada retorna erro sem dizer se foi o e-mail ou a senha | T3 |
+| L4 | E-mail vazio ou sem @ é rejeitado antes de consultar os usuários | T4 (`tests/l4-validacao-email.test.js`) |
+| L5 | Após 3 senhas erradas seguidas, a conta bloqueia por 10 minutos | T5 |
+| L6 | Senha com menos de 8 caracteres é rejeitada no cadastro | T6 |
+
+Não existe usuário fixo no código: para entrar, crie uma conta em **Criar conta**.
+
+## Dados no navegador
 
 ```js
 // cf_usuarios
@@ -60,6 +77,9 @@ O botão **"Restaurar dados de demonstração"** recria só os dados desses usu�
 ├── dashboard.html      # Área logada (cards 04 a 07)
 ├── css/                # Estilos (style.css = globais; responsivo.css = celular e tablet)
 ├── js/                 # Scripts de cada tela (app.js = utilitários compartilhados)
+│   └── auth-core.js    # Regras de login e cadastro, usadas pelas telas e pelos testes
+├── tests/              # Testes automatizados (npm test)
+├── package.json        # Comando de testes
 ├── docs/prints/        # Prints das telas usados neste README
 ├── scripts/            # Setup do GitHub (labels, issues, board)
 └── .github/            # Templates de issue e pull request
@@ -144,15 +164,16 @@ git checkout develop && git merge main && git push
 
 ### Regras da equipe
 
-- Nunca faça commit direto na `main` nem na `develop`: sempre por Pull Request.
-- Todo PR precisa de pelo menos 1 revisão de outra pessoa.
+- Nunca faça commit direto na `main`: ela é protegida e só recebe Pull Request com 1 aprovação.
+- **Sprint 1:** cada pessoa cria a branch pela própria issue (*Development > Create a branch*) e abre o PR para a `main` com `Closes #N`, "O que foi feito" e "Como testar".
+- Quem aprova e faz o merge é um colega, nunca o autor do PR.
 - Datas na interface sempre no formato brasileiro **DD/MM/AAAA**, e valores em **R$**.
 
 ## Equipe
 
-| Nome | GitHub | Cards |
+| Nome | GitHub | Papel |
 |------|--------|-------|
-| | | |
-| | | |
-| | | |
-| | | |
+| Felipe | [@fczymoch](https://github.com/fczymoch) | Product Owner (PO) e Developer |
+| Gabriel | [@gabrieldelin](https://github.com/gabrieldelin) | Scrum Master (SM) e Developer |
+| Carlos Eduardo Dias | [@guidegames123](https://github.com/guidegames123) | Developer |
+| Leonardo | [@LeoLGBO](https://github.com/LeoLGBO) | Developer |
