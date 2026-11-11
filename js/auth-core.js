@@ -19,7 +19,7 @@
     senhaCurta: `A senha deve ter no mínimo ${TAMANHO_MINIMO_SENHA} caracteres.`,
     emailJaCadastrado: "Este e-mail já está cadastrado.",
     semCriptografia: "Não foi possível criar a conta: este navegador não oferece criptografia segura (crypto.subtle). Abra o sistema por https ou localhost.",
-    credenciaisInvalidas: "E-mail ou senha incorretos. Confira os dados e tente novamente."
+    credenciaisInvalidas: "E-mail ou senha incorretos."
   };
 
   // ----- L4: validação de e-mail (não consulta nenhum dado) -----
@@ -119,11 +119,24 @@
       return { ok: true, usuario: { nome: usuario.nome, email: usuario.email } };
     }
 
-    return { cadastrar, autenticar };
+    // Autentica e, só se der certo, grava a sessão (L2). Login que falha nunca cria sessão (L3).
+    async function entrar(email, senha) {
+      const resultado = await autenticar(email, senha);
+      if (resultado.ok && typeof armazenamento.salvarSessao === "function") {
+        armazenamento.salvarSessao({
+          nome: resultado.usuario.nome,
+          email: resultado.usuario.email,
+          loginEm: new Date(agora()).toISOString() // nunca inclui a senha
+        });
+      }
+      return resultado;
+    }
+
+    return { cadastrar, autenticar, entrar };
   }
 
-  // Armazenamento do navegador (localStorage, chave cf_usuarios)
-  function criarArmazenamentoLocal(chave = "cf_usuarios") {
+  // Armazenamento do navegador (localStorage, chaves cf_usuarios e cf_sessao)
+  function criarArmazenamentoLocal(chave = "cf_usuarios", chaveSessao = "cf_sessao") {
     return {
       lerUsuarios() {
         try {
@@ -134,6 +147,9 @@
       },
       salvarUsuarios(lista) {
         localStorage.setItem(chave, JSON.stringify(lista));
+      },
+      salvarSessao(sessao) {
+        localStorage.setItem(chaveSessao, JSON.stringify(sessao));
       }
     };
   }

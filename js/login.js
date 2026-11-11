@@ -15,7 +15,7 @@ const btnEntrar = document.getElementById("btn-entrar");
 const btnMostrarSenha = document.getElementById("btn-mostrar-senha");
 
 // Regras de login ficam no auth-core.js (testadas com npm test)
-const auth = AuthCore.criarAuth({ armazenamento: AuthCore.criarArmazenamentoLocal(STORAGE_KEYS.usuarios) });
+const auth = AuthCore.criarAuth({ armazenamento: AuthCore.criarArmazenamentoLocal(STORAGE_KEYS.usuarios, STORAGE_KEYS.sessao) });
 
 // ----- Mensagens -----
 function mostrarErroCampo(campo, elementoErro, texto) {
@@ -59,7 +59,7 @@ form.addEventListener("submit", async evento => {
   btnEntrar.disabled = true;
   btnEntrar.textContent = "Entrando...";
 
-  const resultado = await auth.autenticar(campoEmail.value, campoSenha.value);
+  const resultado = await auth.entrar(campoEmail.value, campoSenha.value);
 
   if (!resultado.ok) {
     mostrarErroGeral(resultado.erro);
@@ -70,13 +70,7 @@ form.addEventListener("submit", async evento => {
     return;
   }
 
-  // Nunca guardar a senha na sessão
-  const usuario = resultado.usuario;
-  salvarStorage(STORAGE_KEYS.sessao, {
-    nome: usuario.nome,
-    email: usuario.email,
-    loginEm: new Date().toISOString()
-  });
+  // A sessão (sem senha) já foi gravada pelo auth.entrar()
   window.location.href = "dashboard.html";
 });
 
