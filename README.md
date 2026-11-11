@@ -39,7 +39,7 @@ Os testes ficam em `tests/` e testam o `js/auth-core.js`, onde estão as regras 
 | L3 | Senha errada retorna erro sem dizer se foi o e-mail ou a senha | T3 (`tests/l3-senha-errada.test.js`) |
 | L4 | E-mail vazio ou sem @ é rejeitado antes de consultar os usuários | T4 (`tests/l4-validacao-email.test.js`) |
 | L5 | Após 3 senhas erradas seguidas, a conta bloqueia por 10 minutos | T5 |
-| L6 | Senha com menos de 8 caracteres é rejeitada no cadastro | T6 |
+| L6 | Senha com menos de 8 caracteres é rejeitada no cadastro | T6 (`tests/l6-senha-minima.test.js`) |
 
 Não existe usuário fixo no código: para entrar, crie uma conta em **Criar conta**.
 
