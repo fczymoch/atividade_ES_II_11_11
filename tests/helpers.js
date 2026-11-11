@@ -7,6 +7,7 @@ const AuthCore = require("../js/auth-core.js");
 function criarArmazenamentoMemoria(usuariosIniciais = []) {
   let usuarios = structuredClone(usuariosIniciais);
   let sessao = null;
+  let tentativas = {};
   const armazenamento = {
     leituras: 0,
     lerUsuarios() {
@@ -24,6 +25,13 @@ function criarArmazenamentoMemoria(usuariosIniciais = []) {
     },
     sessaoSalva() {
       return sessao === null ? null : structuredClone(sessao);
+    },
+    // Tentativas de login erradas e bloqueios por e-mail (L5)
+    lerTentativas() {
+      return structuredClone(tentativas);
+    },
+    salvarTentativas(objeto) {
+      tentativas = structuredClone(objeto);
     }
   };
   return armazenamento;
