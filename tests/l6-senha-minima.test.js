@@ -25,6 +25,16 @@ describe("T6 - senha mínima de 8 caracteres (L6)", () => {
     }
   });
 
+  test("senha vazia também é rejeitada e nada é gravado", async () => {
+    const { auth, armazenamento } = criarCenario();
+
+    const resultado = await auth.cadastrar({ ...NOVO_USUARIO, senha: "" });
+
+    assert.equal(resultado.ok, false);
+    assert.equal(resultado.campo, "senha");
+    assert.deepEqual(armazenamento.usuariosSalvos(), []);
+  });
+
   test("senha com exatamente 8 caracteres é aceita", async () => {
     const { auth, armazenamento } = criarCenario();
 
